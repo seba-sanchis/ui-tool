@@ -18,7 +18,7 @@ export default function CursorChat({
   }
 
   function handleKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {
-    if (e.key === "Enter") {
+    if (e.key === "Enter" && cursorState.mode === CursorMode.Chat) {
       setCursorState({
         mode: CursorMode.Chat,
         previousMessage: cursorState.message,

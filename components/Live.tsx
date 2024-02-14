@@ -2,12 +2,11 @@ import {
   useBroadcastEvent,
   useEventListener,
   useMyPresence,
-  useOthers,
 } from "@/liveblocks.config";
 import LiveCursors from "./cursor/LiveCursors";
 import { useCallback, useEffect, useState } from "react";
 import CursorChat from "./cursor/CursorChat";
-import { CursorMode, CursorState, Reaction, ReactionEvent } from "@/types/type";
+import { CursorMode, CursorState, Reaction } from "@/types/type";
 import ReactionSelector from "./reaction/ReactionSelector";
 import FlyingReaction from "./reaction/FlyingReaction";
 import useInterval from "@/hooks/useInterval";
@@ -27,8 +26,7 @@ type Props = {
 };
 
 export default function Live({ canvasRef, undo, redo }: Props) {
-  const others = useOthers();
-  const [{ cursor }, updateMyPresence] = useMyPresence() as any;
+  const [{ cursor }, updateMyPresence] = useMyPresence();
 
   const [cursorState, setCursorState] = useState<CursorState>({
     mode: CursorMode.Hidden,
@@ -68,7 +66,7 @@ export default function Live({ canvasRef, undo, redo }: Props) {
   }, 100);
 
   useEventListener((eventData) => {
-    const event = eventData.event as ReactionEvent;
+    const event = eventData.event;
 
     setReaction((reactions) =>
       reactions.concat([
@@ -93,7 +91,7 @@ export default function Live({ canvasRef, undo, redo }: Props) {
     }
   }, []);
 
-  const handlePointerLeave = useCallback((event: React.PointerEvent) => {
+  const handlePointerLeave = useCallback(() => {
     setCursorState({ mode: CursorMode.Hidden });
 
     updateMyPresence({ cursor: null, message: null });
@@ -228,7 +226,7 @@ export default function Live({ canvasRef, undo, redo }: Props) {
           <ReactionSelector setReaction={setReactions} />
         )}
 
-        <LiveCursors others={others} />
+        <LiveCursors />
 
         <Comments />
       </ContextMenuTrigger>
